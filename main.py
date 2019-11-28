@@ -23,7 +23,7 @@ def sub_callback(topic, msg):
   print(msg)
 
 def run():
-  
+
   # Create a new Telenor Start IoT object using the LTE-M network.
   # Change the `network` parameter if you want to use the NB-IoT
   # network like this: iot = StartIoT(network='nb-iot')
