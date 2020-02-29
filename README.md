@@ -28,11 +28,10 @@ The code in this repository reflects settings for the network in Telenor Norway.
 
 ``` python
 # Network related configuration
-BAND = 20                 # Telenor NB-IoT band frequency
-APN = 'telenor.iot'       # Telenor public IoT on 4G APN
-IOTGW_IP = ''             # Telenor IoT Gateway IP address
-EARFCN = 6352             # Telenor E-UTRA Absolute Radio Frequency Channel Number
-COPS = 24201              # Telenor network shortname
+BAND = 20           # Telenor NB-IoT band frequency (use band 28 if you are in Finnmark)
+APN = 'telenor.iot' # Telenor public IoT on 4G APN
+EARFCN = 6352       # Telenor E-UTRA Absolute Radio Frequency Channel Number
+COPS = 24201        # Telenor network shortname
 ```
 
 Notice that since the MQTT broker is operated by Amazon Web Services (AWS) you must use the public Telenor IoT on 4G APN **telenor.iot**.

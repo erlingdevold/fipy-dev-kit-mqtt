@@ -1,7 +1,5 @@
 from network import LTE
 from time import sleep
-import sqnsupgrade
-import usocket
 
 
 # Network types chosen by user
@@ -9,19 +7,20 @@ LTE_M = 'lte-m'
 NB_IOT = 'nb-iot'
 
 # Network related configuration
-BAND = 20                 # Telenor NB-IoT band frequency
-APN = 'telenor.iot'       # Telenor public IoT on 4G APN
-IOTGW_IP = '172.16.15.14' # Telenor IoT Gateway IP address
-IOTGW_PORT = 1234         # Telenor IoT Gateway UDP port
-EARFCN = 6352             # Telenor E-UTRA Absolute Radio Frequency Channel Number
-COPS = 24201              # Telenor network shortname
+BAND = 20           # Telenor NB-IoT band frequency (use band 28 if you are in Finnmark)
+APN = 'telenor.iot' # Telenor public IoT on 4G APN
+EARFCN = 6352       # Telenor E-UTRA Absolute Radio Frequency Channel Number
+COPS = 24201        # Telenor network shortname
 
 class StartIoT:
   def __init__(self, network=LTE_M):
     self._network = network
     self.lte = LTE()
-    self.lte.reset()
-    self.lte.send_at_cmd('AT^RESET')
+    try:
+      self.lte.deinit()
+      self.lte.reset()
+    except:
+      pass
     sleep(5)
 
     self.lte.init()
@@ -73,11 +72,14 @@ class StartIoT:
     # LTE-M (Cat M1)
     else:
       self.send_at_cmd_pretty('AT+CFUN=0')
+      self.send_at_cmd_pretty('AT!="clearscanconfig"')
+      self.send_at_cmd_pretty('AT!="addscanfreq band=%s dl-earfcn=%s"' % (BAND, EARFCN))
       self.send_at_cmd_pretty('AT+CGDCONT=1,"IP","%s"' % APN)
       self.send_at_cmd_pretty('AT+CFUN=1')
       self.send_at_cmd_pretty('AT+CSQ')
 
-    # self.lte.attach(band=BAND, apn=APN)
+    # For a range scan:
+    # AT!="addscanfreqrange band=20 dl-earfcn-min=3450 dl-earfcn-max=6352"
 
     print('Attaching...')
     while not self.lte.isattached():
@@ -98,13 +100,3 @@ class StartIoT:
   def dettach(self):
     if self.lte.isattached():
       self.lte.dettach()
-
-  def send(self, data):
-    if not self.lte.isconnected():
-      raise Exception('Not connected! Unable to send.')
-
-    s = usocket.socket(usocket.AF_INET, usocket.SOCK_DGRAM, usocket.IPPROTO_UDP)
-    IP_ADDR = usocket.getaddrinfo(IOTGW_IP, IOTGW_PORT)[0][-1]
-    s.connect(IP_ADDR)
-    s.send(data)
-    s.close()
