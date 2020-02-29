@@ -24,7 +24,7 @@ iot = StartIoT(network='nb-iot')
 
 ## Network Related Code Changes
 
-The code in this repository reflects settings for the network in Telenor Norway. If your device will connect to a different network you will have to make some changes in [lib/telenor.py:11](./lib/telenor.py#L9) to reflect this:
+The code in this repository reflects settings for the network in Telenor Norway. If your device will connect to a different network you will have to make some changes in [lib/telenor.py:9](./lib/telenor.py#L9) to reflect this:
 
 ``` python
 # Network related configuration
