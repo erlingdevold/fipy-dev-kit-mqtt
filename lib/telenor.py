@@ -7,7 +7,7 @@ LTE_M = 'lte-m'
 NB_IOT = 'nb-iot'
 
 # Network related configuration
-BAND = 20           # Telenor NB-IoT band frequency (use band 28 if you are in Finnmark)
+BAND = 20           # Telenor NB-IoT band frequency (use band 28 if you are in Finnmark close to the Russian border)
 APN = 'telenor.iot' # Telenor public IoT on 4G APN
 EARFCN = 6352       # Telenor E-UTRA Absolute Radio Frequency Channel Number
 COPS = 24201        # Telenor network shortname
