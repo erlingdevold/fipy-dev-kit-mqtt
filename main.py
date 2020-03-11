@@ -5,6 +5,7 @@ from ujson import dumps
 from time import sleep
 
 # Imports for sensor
+import time
 import pycom
 from machine import Pin
 from dth import DTH
@@ -75,9 +76,9 @@ def run():
       # temperature = result.temperature
       # humidity = result.humidity
       # if result.is_valid():
-      # pycom.rgbled(0x001000) # green
-      # print("Temperature: %d C" % result.temperature)
-      # print("Humidity: %d %%" % result.humidity)
+      #   pycom.rgbled(0x001000) # green
+      #   print("Temperature: %d C" % result.temperature)
+      #   print("Humidity: %d %%" % result.humidity)
 
 
       # Create the MQTT data payload
