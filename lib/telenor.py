@@ -1,17 +1,23 @@
 from network import LTE
 from time import sleep
-
-
+from machine import reset #Import the reset function used to reboot the device.
 # Network types chosen by user
 LTE_M = 'lte-m'
 NB_IOT = 'nb-iot'
 
 # Network related configuration
-BAND = 20           # Telenor NB-IoT band frequency (use band 28 if you are in Finnmark close to the Russian border)
-APN = 'telenor.iot' # Telenor public IoT on 4G APN
-EARFCN = 6352       # Telenor E-UTRA Absolute Radio Frequency Channel Number
-COPS = 24201        # Telenor network shortname
-
+BAND = 20 #Telenor NB-IoT band frequency (use band 28 if you are in Finnmark close to the Russian border)
+APN = 'telenor.iot' #Telenor public IoT on 4G APN
+EARFCN = 6352 # Telenor E-UTRA Absolute Radio Frequency Channel Number
+COPS = 24201  # Telenor network shortname
+attach_timeout = 30 #Attach timeout in seconds. If this is exceeded, the exception AttachTimeout will be raised.
+connect_timeout = 30 #Connect timeout in seconds. If this is exceeded, the exception ConnectTimeout will be raised.
+class WrongNetwork(Exception): #Exception for when the network is configured wrong.
+  pass
+class AttachTimeout(Exception): #Exception for when the attach process reaches a timeout (configured above)
+  pass
+class ConnectTimeout(Exception): #Exception for when the connection process reaches a timeout (configured above)
+  pass  
 class StartIoT:
   def __init__(self, network=LTE_M):
     self._network = network
@@ -40,10 +46,14 @@ class StartIoT:
         print('Modem in using LTE-M firmware (%s/%s).' % (lines[1], lines[2]))
       if not is_nb and self._network == NB_IOT:
         print('You cannot connect using NB-IoT with wrong modem firmware! Please re-flash the modem with the correct firmware.')
+        raise WrongNetwork
       if is_nb and self._network == LTE_M:
         print('You cannot connect using LTE-M with wrong modem firmware! Please re-flash the modem with the correct firmware.')
+        raise WrongNetwork
     else:
-      print('Failed to determine modem firmware. Please reboot your device manually.')
+      print('Failed to determine modem firmware. Rebooting device...')
+      reset() #Reboot the device
+
 
   def send_at_cmd_pretty(self, cmd):
     print('>', cmd)
@@ -82,16 +92,27 @@ class StartIoT:
     # AT!="addscanfreqrange band=20 dl-earfcn-min=3450 dl-earfcn-max=6352"
 
     print('Attaching...')
-    while not self.lte.isattached():
+    seconds = 0
+    while not self.lte.isattached() and seconds < attach_timeout:
       sleep(0.25)
-    print('Attached!')
-
+      seconds += 0.25
+    if self.lte.isattached():
+      print('Attached!')
+    else:
+      print('Failed to attach to LTE (timeout)!')
+      raise AttachTimeout
     self.lte.connect()
 
     print('Connecting...')
-    while not self.lte.isconnected():
+    seconds = 0
+    while not self.lte.isconnected() and seconds < connect_timeout:
       sleep(0.25)
-    print('Connected!')
+      seconds += 0.25
+    if self.lte.isconnected():
+      print('Connected!')
+    else:
+      print('Failed to connect to LTE (timeout)!')
+      raise ConnectTimeout
 
   def disconnect(self):
     if self.lte.isconnected():
