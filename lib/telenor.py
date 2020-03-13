@@ -1,23 +1,28 @@
 from network import LTE
 from time import sleep
-from machine import reset #Import the reset function used to reboot the device.
+from machine import reset
+
+
 # Network types chosen by user
 LTE_M = 'lte-m'
 NB_IOT = 'nb-iot'
 
 # Network related configuration
-BAND = 20 #Telenor NB-IoT band frequency (use band 28 if you are in Finnmark close to the Russian border)
-APN = 'telenor.iot' #Telenor public IoT on 4G APN
-EARFCN = 6352 # Telenor E-UTRA Absolute Radio Frequency Channel Number
-COPS = 24201  # Telenor network shortname
-attach_timeout = 30 #Attach timeout in seconds. If this is exceeded, the exception AttachTimeout will be raised.
-connect_timeout = 30 #Connect timeout in seconds. If this is exceeded, the exception ConnectTimeout will be raised.
-class WrongNetwork(Exception): #Exception for when the network is configured wrong.
+BAND = 20            # Telenor NB-IoT band frequency (use band 28 if you are in Finnmark close to the Russian border)
+APN = 'telenor.iot'  # Telenor public IoT on 4G APN
+EARFCN = 6352        # Telenor E-UTRA Absolute Radio Frequency Channel Number
+COPS = 24201         # Telenor Norway MNC-MCC
+
+attach_timeout = 30  # Attach timeout in seconds. If this is exceeded, the exception AttachTimeout will be raised.
+connect_timeout = 30 # Connect timeout in seconds. If this is exceeded, the exception ConnectTimeout will be raised.
+
+class WrongNetwork(Exception): # Exception for when the network is configured wrong.
   pass
-class AttachTimeout(Exception): #Exception for when the attach process reaches a timeout (configured above)
+class AttachTimeout(Exception): # Exception for when the attach process reaches a timeout (configured above)
   pass
-class ConnectTimeout(Exception): #Exception for when the connection process reaches a timeout (configured above)
-  pass  
+class ConnectTimeout(Exception): # Exception for when the connection process reaches a timeout (configured above)
+  pass
+
 class StartIoT:
   def __init__(self, network=LTE_M):
     self._network = network
@@ -52,7 +57,7 @@ class StartIoT:
         raise WrongNetwork
     else:
       print('Failed to determine modem firmware. Rebooting device...')
-      reset() #Reboot the device
+      reset() # Reboot the device
 
 
   def send_at_cmd_pretty(self, cmd):
