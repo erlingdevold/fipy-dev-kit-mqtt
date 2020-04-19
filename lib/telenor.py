@@ -13,8 +13,8 @@ APN = 'telenor.iot'  # Telenor public IoT on 4G APN
 EARFCN = 6352        # Telenor E-UTRA Absolute Radio Frequency Channel Number
 COPS = 24201         # Telenor Norway MNC-MCC
 
-attach_timeout = 30  # Attach timeout in seconds. If this is exceeded, the exception AttachTimeout will be raised.
-connect_timeout = 30 # Connect timeout in seconds. If this is exceeded, the exception ConnectTimeout will be raised.
+attach_timeout = 60  # Attach timeout in seconds. If this is exceeded, the exception AttachTimeout will be raised.
+connect_timeout = 60 # Connect timeout in seconds. If this is exceeded, the exception ConnectTimeout will be raised.
 
 class WrongNetwork(Exception): # Exception for when the network is configured wrong.
   pass
