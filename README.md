@@ -1,6 +1,7 @@
 # FiPy Dev-Kit MQTT Example Code
 
-The example publishes data packets over LTE-M (Cat M1) or NB-IoT network to Telenor Managed IoT Cloud (MIC) using the MQTT protocol.
+The example publishes data packets over LTE-M (Cat M1) or NB-IoT network to Telenor Managed IoT Cloud (MIC) using the MQTT protocol.  
+**NB! This code example is for prototyping only. Not for deployment in production.** 
 
 ## Prerequisites
 
